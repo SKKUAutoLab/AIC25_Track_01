@@ -1,0 +1,62 @@
+[tool.poetry]
+name          = "AIC25-Track1"
+version       = "0.0.1"
+description   = "Source code of Automation Lab for AI City challenge - Track 1."
+license       = "MIT"
+authors       = [
+    "Automation Lab, Sungkyunkwan University",
+]
+maintainers   = [
+    "Automation Lab, Sungkyunkwan University",
+]
+readme        = "README.md"
+keywords      = [
+    "computer vision",
+    "image processing",
+    "deep learning",
+    "research",
+]
+classifiers = [
+    "Development Status :: 1 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3 :: Only",
+]
+packages = [
+    {include = "mtmc"       , from = "src"},
+    {include = "ultralytics-8.3.141", from = "third_party"},
+    {include = "ultilities" , from = "."},
+]
+include = [
+    "LICENSE",
+    "pyproject.toml",
+]
+exclude = []
+
+[tool.poetry.dependencies]
+python    = ">=3.10, <3.13"
+
+
+[tool.poetry.extras]
+dev = [
+#    "black",
+#    "flake8",
+#    "isort",
+#    "mypy",
+#    "pytest",
+#    "pytest-cov",
+#    "pytest-xdist",
+#    "pre-commit",
+]
+
+[build-system]
+requires      = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+# Comments
+#
+# 1. Fix thop error: AttributeError: 'some_object' object has no attribute 'total_ops'
+# pip install --upgrade git+https://github.com/sile/pytorch-OpCounter.git@8f115d4aeaee787d7347b75f30be28164b02ccaa

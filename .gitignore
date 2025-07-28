@@ -205,3 +205,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/.gitignore
+/.idea/AIC25_Track_01.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/model_zoo/aic25_track1/
