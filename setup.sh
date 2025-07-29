@@ -3,8 +3,9 @@
 # stop at the first error
 set -e
 
-# conda create --name aic25_track1 python=3.10 -y
-# conda activate aic25_track1
+# Create environment
+conda create --name aic25_track1 python=3.10 -y
+conda activate aic25_track1
 
 # Install the required packages.
 pip install poetry==1.2.0  # Python dependency management and packaging made easy.
@@ -21,10 +22,14 @@ pip install h5py==3.14.0  # HDF5 is a file format and set of tools for managing 
 pip install open3d==0.19.0 # An open-source library that supports rapid development of software that deals with 3D data.
 pip install scipy==1.15.3  # SciPy is a Python library used for scientific and technical computing.
 
-# run line by line
+# Run line by line
 pip install torch --index-url https://download.pytorch.org/whl/cu118
 pip install torchvision --index-url https://download.pytorch.org/whl/cu118
 pip install torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# Install independent Ultralytics
+cd third_party/ultralytics-8.3.141
+pip install -e .
 
 # In stall the project in editable mode.
 rm -rf poetry.lock
