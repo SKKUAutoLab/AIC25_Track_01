@@ -9,3 +9,15 @@ Go to the website of AI-City Challenge to get the dataset.
 - https://www.aicitychallenge.org/2025-track1/
 
 Download dataset to the folder **<folder_test_dataset>**
+
+The dataset folder structure should be as following:
+
+```shell
+<folder_test_dataset>
+│   ├── test
+│   │   ├── Warehouse_017
+│   │   ├── Warehouse_018
+│   │   ├── Warehouse_019
+│   │   └── Warehouse_020
+...
+```
