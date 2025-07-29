@@ -26,7 +26,6 @@ classifiers = [
 ]
 packages = [
     {include = "mtmc"       , from = "src"},
-    {include = "ultralytics-8.3.141", from = "third_party"},
     {include = "ultilities" , from = "."},
 ]
 include = [
