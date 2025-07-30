@@ -21,8 +21,8 @@ if "DIR_TSS" in os.environ:
 else:
     root_dir   = os.path.dirname(os.path.abspath(__file__))  	    # "src/tracking"
 
-config_dir     = os.path.join(root_dir, "configs")              	# "src/tracking/configs"
-models_zoo_dir = os.path.join(root_dir, "models")        			# "models_zoo"
+config_dir     = os.path.join(root_dir, "configs")              	# "src/mtmc/configs"
+models_zoo_dir = os.path.join(root_dir, "models_zoo")        		# "models_zoo"
 
 # MARK: - Process Config
 
