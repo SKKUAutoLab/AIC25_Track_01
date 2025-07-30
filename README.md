@@ -21,3 +21,7 @@ The dataset folder structure should be as following:
 │   │   └── Warehouse_020
 ...
 ```
+
+#### b. Group training dataset into specific type:
+
+The framework must not only decrease the quantity of training bounding boxes but also maintain accuracy at the highest possible level.
