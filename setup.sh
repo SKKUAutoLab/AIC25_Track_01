@@ -36,4 +36,4 @@ rm -rf poetry.lock
 poetry install --extras "dev"
 rm -rf poetry.lock
 
-echo "Finish installation successfully!"
+echo "Finish installation successfully"
