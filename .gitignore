@@ -212,3 +212,5 @@ __marimo__/
 /.idea/modules.xml
 /.idea/vcs.xml
 /model_zoo/aic25_track1/
+*.pt
+*.pth
