@@ -214,3 +214,5 @@ __marimo__/
 /model_zoo/aic25_track1/
 *.pt
 *.pth
+*.onnx
+*.trt
