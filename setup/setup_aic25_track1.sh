@@ -22,6 +22,9 @@ pip install h5py==3.14.0  # HDF5 is a file format and set of tools for managing 
 pip install open3d==0.19.0 # An open-source library that supports rapid development of software that deals with 3D data.
 pip install scipy==1.15.3  # SciPy is a Python library used for scientific and technical computing.
 
+pip install lap==0.5.12  # Linear Assignment Problem solver (LAPJV/LAPMOD).
+pip install cython-bbox  # Cython implementation of the bounding box utilities.
+
 # Run line by line
 pip install torch --index-url https://download.pytorch.org/whl/cu118
 pip install torchvision --index-url https://download.pytorch.org/whl/cu118
