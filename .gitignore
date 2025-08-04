@@ -206,9 +206,13 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 /model_zoo/aic25_track1/
+viz/
 *.pt
 *.pth
+*.tar
 *.onnx
 *.trt
 *.npy
 *.npl
+
+
