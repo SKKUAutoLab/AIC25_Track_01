@@ -1,8 +1,6 @@
-# AIC25 Track 01
+# DepthTrack: Cluster Meets BEV for Multi-Camera Multi-Target 3D Tracking
 
 Track 1: Multi-Camera 3D Perception of Automation Lab at Sungkyunkwan University
-
-Paper: "DepthTrack: Cluster Meets BEV for Multi-Camera Multi-Target 3D Tracking"
 
 ---
 ## I. Dataset preparation
