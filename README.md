@@ -1,6 +1,10 @@
 # DepthTrack: Cluster Meets BEV for Multi-Camera Multi-Target 3D Tracking
 
+### Team SKKU-AutoLab - ID 15
+
 Track 1: Multi-Camera 3D Perception of Automation Lab at Sungkyunkwan University
+
+This paper has been accepted and will be presented at the ICCV 2025 Workshop.
 
 ---
 ## I. Dataset preparation
