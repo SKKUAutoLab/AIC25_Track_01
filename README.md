@@ -2,6 +2,9 @@
 
 Track 1: Multi-Camera 3D Perception of Automation Lab at Sungkyunkwan University
 
+---
+## I. Dataset preparation
+
 ##### a. Data download
 
 Go to the website of AI-City Challenge to get the dataset.
