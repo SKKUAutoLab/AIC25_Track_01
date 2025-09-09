@@ -244,9 +244,9 @@ def run_tracking_per_scene(scene_name, args):
                                 }
                             )
 
-        if viz_flag:
-            for camIdx in range(0, len(camera_keys)):    
-                cv2.imwrite(viz_fol_list[camIdx] + '/' + str(frame_idx).zfill(7) + '.jpg', cam_viz_list[camIdx])
+        # if viz_flag:
+        #     for camIdx in range(0, len(camera_keys)):
+        #         cv2.imwrite(viz_fol_list[camIdx] + '/' + str(frame_idx).zfill(7) + '.jpg', cam_viz_list[camIdx])
         
         if save_track_info_flag:
             for camIdx in range(0, len(camera_keys)):  

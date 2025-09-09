@@ -398,13 +398,13 @@ def run_mv_tracking(scene_name, args):
                                 + " - " + str(len(missing_obj_list)), 
                                     (100, 100 + 70 * idx), cv2.FONT_HERSHEY_PLAIN, 3, colors[idx], 2, cv2.LINE_AA)
         
-        cv2.namedWindow("bev_map", cv2.WINDOW_NORMAL)
-        cv2.imshow('bev_map', frame_bev)
+        # cv2.namedWindow("bev_map", cv2.WINDOW_NORMAL)
+        # cv2.imshow('bev_map', frame_bev)
 
         # imwrite, save on the disk
-        if mv_viz_flag:
-            cv2.imwrite(save_viz_pth + '/' + str(frame_idx).zfill(7) + '.jpg', frame_bev)
-        cv2.waitKey(1)
+        # if mv_viz_flag:
+        #     cv2.imwrite(save_viz_pth + '/' + str(frame_idx).zfill(7) + '.jpg', frame_bev)
+        # cv2.waitKey(1)
 
 
 def make_parser_multiview():
