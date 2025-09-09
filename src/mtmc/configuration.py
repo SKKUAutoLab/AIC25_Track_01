@@ -11,7 +11,7 @@ from typing import Union
 
 from munch import Munch
 
-from det_iden_track.core.io.file import load
+from mtmc.core.io.file import load
 
 
 # MARK: - Directories

@@ -13,6 +13,7 @@ from tqdm import tqdm
 from loguru import logger
 
 from mtmc.core.objects.units import Camera
+from ultilities import configuration
 
 object_type_name = {
 	0: "Person"      , # red
@@ -48,7 +49,7 @@ def rename_files(scene_name, image_result_test):
 
 	os.makedirs(folder_output, exist_ok=True)
 
-	for txt_path in tqdm(list_txt, desc=f"Scene name {scene_name} : "):
+	for txt_path in tqdm(list_txt, desc=f"Rename file in scene name {scene_name} : "):
 		txt_path_old     = txt_path
 		txt_name_old     = os.path.basename(txt_path)
 		txt_name_old_ext = os.path.splitext(txt_name_old)[0]
@@ -61,15 +62,14 @@ def rename_files(scene_name, image_result_test):
 		# print(f"{txt_name_old} -- {txt_name_new}")
 
 		try:
-			# Rename the folder
 			shutil.copy(txt_path_old, txt_path_new)
-			# logger.info(f"Folder '{txt_path_old}' successfully copied to '{txt_path_new}'.")
+			# print(f"'{txt_path_old}' copied to '{txt_path_new}' (overwritten if existed).")
 		except FileNotFoundError:
-			logger.error(f"Error: Folder '{txt_path_old}' not found.")
-		except FileExistsError:
-			logger.error(f"Error: Folder '{txt_path_new}' already exists.")
-		except Exception as e:
-			logger.error(f"An unexpected error occurred: {e}")
+			# print(f"Error: Source file '{txt_path_old}' not found.")
+			pass
+		except OSError as e:
+			# print(f"Error copying file: {e}")
+			pass
 
 def crop_image_from_all_cam_each_scene(scene_name, image_result_test):
 	def custom_file_sort(file_path):
@@ -101,8 +101,8 @@ def crop_image_from_all_cam_each_scene(scene_name, image_result_test):
 		camera_name  = Camera.adjust_camera_id(str(image_index // 9000))
 
 		# DEBUG:
-		if frame_id >= 500:
-			continue
+		# if frame_id >= 500:
+		# 	continue
 
 		pbar.set_description(f"Processing croping {scene_name} -- {camera_name} -- {frame_id}")
 
@@ -110,7 +110,9 @@ def crop_image_from_all_cam_each_scene(scene_name, image_result_test):
 		# 	pbar.update(1)
 		# 	continue
 
-		img_path = os.path.join(folder_input_img, os.path.basename(lbl_path).replace(".txt", ".jpg"))
+		# NOTE: Construct the image path from the label path
+		# img_path = os.path.join(folder_input_img, os.path.basename(lbl_path).replace(".txt", ".jpg"))
+		img_path = os.path.join(configuration.FOLDER_INPUT_FULL_EXTRACTION_IMAGE, scene_name, camera_name, f"{frame_id:08d}.jpg")
 
 		if not os.path.exists(img_path):
 			logger.warning(f"Image not found for label: {lbl_path}")
@@ -199,8 +201,8 @@ def create_json_from_cropped_images(scene_name, image_result_test):
 		camera_index = f"{lbl_index // 9000:04d}"
 
 		# DEBUG:
-		if frame_id >= 500:
-			continue
+		# if frame_id >= 500:
+		# 	continue
 
 		pbar.set_description(f"Processing building json {scene_name} -- {camera_name} -- {frame_id}")
 
@@ -298,14 +300,14 @@ def create_json_from_cropped_images(scene_name, image_result_test):
 
 
 def main():
-	parser = argparse.ArgumentParser(description="Process crop detetion image.")
+	parser = argparse.ArgumentParser(description="Process crop detection image.")
 	parser.add_argument('--image_result_test' , type = str, default = "/media/vsw/Data1/MTMC_Tracking_2025/ExtractFrames/image_result_test/", help = "Folder where result out")
 	args = parser.parse_args()
 
 	list_scene = ["Warehouse_017", "Warehouse_018", "Warehouse_019", "Warehouse_020"]
 	# list_scene = ["Warehouse_018", "Warehouse_019", "Warehouse_020"]
 	for scene_name in tqdm(list_scene):
-		# rename_files(scene_name, args.image_result_test)
+		rename_files(scene_name, args.image_result_test)
 		crop_image_from_all_cam_each_scene(scene_name, args.image_result_test)
 		create_json_from_cropped_images(scene_name, args.image_result_test)
 		pass

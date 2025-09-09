@@ -40,6 +40,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 import torch
+from tqdm import tqdm
 
 from ultralytics.cfg import get_cfg, get_save_dir
 from ultralytics.data import load_inference_source
@@ -308,6 +309,7 @@ class BasePredictor:
                 ops.Profile(device=self.device),
             )
             self.run_callbacks("on_predict_start")
+            pbar = tqdm(total=len(self.dataset), desc="Predicting")
             for self.batch in self.dataset:
                 self.run_callbacks("on_predict_batch_start")
                 paths, im0s, s = self.batch
@@ -341,11 +343,14 @@ class BasePredictor:
                         s[i] += self.write_results(i, Path(paths[i]), im, s)
 
                 # Print batch results
+                # NOTE: Print result each image in batch
                 if self.args.verbose:
                     LOGGER.info("\n".join(s))
+                pbar.update(n)
 
                 self.run_callbacks("on_predict_batch_end")
                 yield from self.results
+            pbar.close()
 
         # Release assets
         for v in self.vid_writer.values():

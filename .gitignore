@@ -214,5 +214,5 @@ viz/
 *.trt
 *.npy
 *.npl
-
-
+*.zip
+/dataset/

@@ -1,0 +1,300 @@
+{
+  "version": "2.5.0",
+  "flags": {},
+  "shapes": [
+    {
+      "kie_linking": [],
+      "label": "Camera",
+      "score": null,
+      "points": [
+        [
+          878.125,
+          914.375
+        ],
+        [
+          830.625,
+          913.75
+        ],
+        [
+          699.375,
+          731.875
+        ],
+        [
+          863.125,
+          455.0
+        ],
+        [
+          1076.875,
+          837.5
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "difficult": false,
+      "shape_type": "polygon",
+      "flags": {},
+      "attributes": {}
+    },
+    {
+      "kie_linking": [],
+      "label": "Camera_01",
+      "score": null,
+      "points": [
+        [
+          1218.75,
+          107.5
+        ],
+        [
+          1146.875,
+          80.0
+        ],
+        [
+          1004.375,
+          265.0
+        ],
+        [
+          1218.75,
+          583.75
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "difficult": false,
+      "shape_type": "polygon",
+      "flags": {},
+      "attributes": {}
+    },
+    {
+      "kie_linking": [],
+      "label": "Camera_02",
+      "score": null,
+      "points": [
+        [
+          1221.0576923076924,
+          79.8076923076923
+        ],
+        [
+          1220.0961538461538,
+          731.7307692307692
+        ],
+        [
+          1135.4807692307693,
+          785.5769230769231
+        ],
+        [
+          860.4807692307693,
+          671.1538461538461
+        ],
+        [
+          841.25,
+          79.8076923076923
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "difficult": false,
+      "shape_type": "polygon",
+      "flags": {},
+      "attributes": {}
+    },
+    {
+      "kie_linking": [],
+      "label": "Camera_03",
+      "score": null,
+      "points": [
+        [
+          677.8378378378378,
+          913.7837837837837
+        ],
+        [
+          677.8929765886287,
+          659.1973244147157
+        ],
+        [
+          1041.5384615384617,
+          707.6923076923077
+        ],
+        [
+          1121.025641025641,
+          913.8461538461538
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "difficult": false,
+      "shape_type": "polygon",
+      "flags": {},
+      "attributes": {}
+    },
+    {
+      "label": "Camera_04",
+      "score": null,
+      "points": [
+        [
+          1219.8529411764705,
+          80.07352941176477
+        ],
+        [
+          867.741935483871,
+          80.55299539170504
+        ],
+        [
+          785.8156028368795,
+          226.17021276595744
+        ],
+        [
+          1219.1836734693877,
+          761.2244897959184
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "difficult": false,
+      "shape_type": "polygon",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "Camera_05",
+      "score": null,
+      "points": [
+        [
+          1126.36815920398,
+          913.8805970149252
+        ],
+        [
+          1218.407960199005,
+          746.2189054726367
+        ],
+        [
+          1215.9171597633135,
+          279.8816568047337
+        ],
+        [
+          901.7159763313609,
+          156.80473372781066
+        ],
+        [
+          750.2366863905326,
+          285.79881656804736
+        ],
+        [
+          887.5147928994082,
+          913.6094674556214
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "difficult": false,
+      "shape_type": "polygon",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "Camera_06",
+      "score": null,
+      "points": [
+        [
+          677.8688524590164,
+          77.70491803278685
+        ],
+        [
+          678.688524590164,
+          737.5409836065573
+        ],
+        [
+          736.2626262626262,
+          776.7676767676768
+        ],
+        [
+          952.4242424242424,
+          629.2929292929293
+        ],
+        [
+          854.4444444444443,
+          76.76767676767678
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "difficult": false,
+      "shape_type": "polygon",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "Camera_07",
+      "score": null,
+      "points": [
+        [
+          1219.86301369863,
+          636.2328767123288
+        ],
+        [
+          1219.86301369863,
+          810.8904109589041
+        ],
+        [
+          1173.972602739726,
+          915.0
+        ],
+        [
+          788.3561643835617,
+          914.3150684931506
+        ],
+        [
+          759.5890410958905,
+          869.7945205479452
+        ],
+        [
+          852.7397260273973,
+          649.2465753424657
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "difficult": false,
+      "shape_type": "polygon",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "Camera_08",
+      "score": null,
+      "points": [
+        [
+          1219.871794871795,
+          520.4487179487179
+        ],
+        [
+          1219.2307692307693,
+          886.474358974359
+        ],
+        [
+          1160.2564102564102,
+          904.4230769230769
+        ],
+        [
+          1053.2051282051282,
+          724.9358974358975
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "difficult": false,
+      "shape_type": "polygon",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    }
+  ],
+  "imagePath": "map_in_Warehouse_018-enhance.jpg",
+  "imageData": null,
+  "imageHeight": 1080,
+  "imageWidth": 1920,
+  "description": ""
+}
