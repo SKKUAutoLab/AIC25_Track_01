@@ -767,6 +767,7 @@ def create_final_result(scene_name, json_path_postprosess, result_final_path):
 					              f"{frame_data['w']:f} {frame_data['l']:f} {frame_data['h']:f} "
 					              f"{frame_data['rotation']:f}\n")
 
+
 def main_create_final_result():
 	folder_input  = configuration.FOLDER_INPUT_LOOKUP_TABLE
 	folder_output = configuration.FOLDER_INPUT_LOOKUP_TABLE
