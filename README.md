@@ -1,8 +1,12 @@
-# AIC25 Track 01
+# DepthTrack: Cluster Meets BEV for Multi-Camera Multi-Target 3D Tracking
+
+### Team SKKU-AutoLab - ID 15
 
 Track 1: Multi-Camera 3D Perception of Automation Lab at Sungkyunkwan University
 
-Paper: "DepthTrack: Cluster Meets BEV for Multi-Camera Multi-Target 3D Tracking"
+This paper has been accepted and will be presented at the ICCV 2025 Workshop.
+
+📄 Paper: [DepthTrack: Cluster Meets BEV for Multi-Camera Multi-Target 3D Tracking](https://openaccess.thecvf.com/content/ICCV2025W/AICity/html/Tran_DepthTrack_Cluster_Meets_BEV_for_Multi-Camera_Multi-Target_3D_Tracking_ICCVW_2025_paper.html)
 
 ---
 ## I. Dataset preparation
@@ -187,7 +191,21 @@ Training dataset:
 - https://drive.google.com/drive/folders/1ZETSfAbYNwVBoc_GBjWz3mjYhp2HgNRt?usp=sharing
 
 ---
-## V. Acknowledgement
+## V. Citation
+
+```
+@InProceedings{Tran_2025_ICCV,
+    author    = {Tran, Tai Huu-Phuong and Tran, Duong Nguyen-Ngoc and Huynh, Ngoc Doan-Minh and Tran, Chi Dai and Pham, Long Hoang and Ho, Quoc Pham-Nam and Nguyen, Huy-Hung and Vu, Duong Khac and Jeon, Hyung-Min and Jeon, Hyung-Joon and Phan, Son Hong and Le Ba Khanh, Trinh and Jeon, Jae Wook},
+    title     = {DepthTrack: Cluster Meets BEV for Multi-Camera Multi-Target 3D Tracking},
+    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) Workshops},
+    month     = {October},
+    year      = {2025},
+    pages     = {5289-5298}
+}
+```
+
+---
+## VI. Acknowledgement
 
 Most of the code is adapted from [Mon](https://github.com/phlong3105/mon).
 
