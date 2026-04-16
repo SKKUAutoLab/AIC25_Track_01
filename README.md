@@ -8,6 +8,10 @@ This paper has been accepted and will be presented at the ICCV 2025 Workshop.
 
 📄 Paper: [DepthTrack: Cluster Meets BEV for Multi-Camera Multi-Target 3D Tracking](https://openaccess.thecvf.com/content/ICCV2025W/AICity/html/Tran_DepthTrack_Cluster_Meets_BEV_for_Multi-Camera_Multi-Target_3D_Tracking_ICCVW_2025_paper.html)
 
+### Rank 2nd of Track 1 in the AI City Challenge in ICCV 2025, organized by Nvidia.
+
+![AIC25_Track_1_Final_Rank.png](AIC25_Track_1_Final_Rank.png)
+
 ---
 ## I. Dataset preparation
 
