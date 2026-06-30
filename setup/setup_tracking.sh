@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# stop at the first error
-set -e
-
 conda create -n tracking python=3.10 -y
 conda activate tracking
 
