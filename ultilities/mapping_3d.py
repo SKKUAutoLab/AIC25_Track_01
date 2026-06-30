@@ -656,20 +656,20 @@ def create_trajectory_middle_result_postprocess_ver_1(
 
 			# initialize object data
 			json_data[str(object_id)] = {
-				"object_type_id": object_info["object_type_id"],
+				"object_type_id": object_info.get("object_type_id", 0),
 				"frames": {}
 			}
 
 			# add object
 			for img_index in range(number_image_per_camera):
 				json_data[str(object_id)]["frames"][str(int(img_index))] = {
-					"x": object_info["x"],
-					"y": object_info["y"],
-					"z": object_info["z"],
-					"yaw": object_info["yaw"],
-					"w": object_info["width"],
-					"h": object_info["height"],
-					"l": object_info["length"],
+					"x": object_info.get("x", 0.0),
+					"y": object_info.get("y", 0.0),
+					"z": object_info.get("z", 0.0),
+					"yaw": object_info.get("yaw", 0.0),
+					"w": object_info.get("w", 0.0),
+					"h": object_info.get("h", 0.0),
+					"l": object_info.get("l", 0.0),
 				}
 
 	# write output JSON file

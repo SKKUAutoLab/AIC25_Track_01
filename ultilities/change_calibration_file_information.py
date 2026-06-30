@@ -11,7 +11,6 @@ from tqdm import tqdm
 from mtmc.core.objects.units import Camera
 
 def rename_file_videos_depthmaps(folder_intput, scene_name):
-	# Rename video
 	folder_input_videos  = os.path.join(folder_intput, scene_name, "videos/")
 	list_files = glob.glob(os.path.join(folder_input_videos, "*.mp4"))
 
@@ -24,7 +23,6 @@ def rename_file_videos_depthmaps(folder_intput, scene_name):
 		file_path_new       = os.path.join(folder_input_videos, file_name_new)
 
 		try:
-			# Rename the folder
 			os.rename(file_path_old, file_path_new)
 			logger.info(f"Folder '{file_path_old}' successfully renamed to '{file_path_new}'.")
 		except FileNotFoundError:
@@ -34,7 +32,6 @@ def rename_file_videos_depthmaps(folder_intput, scene_name):
 		except Exception as e:
 			logger.error(f"An unexpected error occurred: {e}")
 
-	# Rename depthmaps
 	folder_input_depthmaps  = os.path.join(folder_intput, scene_name, "depth_maps/")
 	list_files = glob.glob(os.path.join(folder_input_depthmaps, "*.h5"))
 
@@ -47,7 +44,6 @@ def rename_file_videos_depthmaps(folder_intput, scene_name):
 		file_path_new       = os.path.join(folder_input_depthmaps, file_name_new)
 
 		try:
-			# Rename the folder
 			os.rename(file_path_old, file_path_new)
 			logger.info(f"Folder '{file_path_old}' successfully renamed to '{file_path_new}'.")
 		except FileNotFoundError:
@@ -60,16 +56,13 @@ def rename_file_videos_depthmaps(folder_intput, scene_name):
 
 def adjust_camera_id_calibration(json_file):
 
-	# Load the file
 	with open(json_file, "r") as f_read:
 		data = json.load(f_read)
 
-	# Replace id for each sensor of type "camera"
 	for sensor in data.get("sensors", []):
 		if sensor.get("type") == "camera":
 			sensor["id"] = Camera.adjust_camera_id(sensor["id"])
 
-	# Optionally, save to a new file
 	json_file = json_file.replace("calibration.json", "calibration_modified.json")
 	with open(json_file, "w") as f_write:
 		json.dump(data, f_write, indent=4)
@@ -84,7 +77,6 @@ def main():
 	folder_intput = args.input_test
 	list_scene    = ["Warehouse_017", "Warehouse_018", "Warehouse_019", "Warehouse_020"]
 
-	# NOTE: Adjust camera IDs in each JSON file
 	for scene_name in tqdm(list_scene):
 		adjust_camera_id_calibration(os.path.join(folder_intput, scene_name, f"calibration.json"))
 		rename_file_videos_depthmaps(folder_intput, scene_name)
