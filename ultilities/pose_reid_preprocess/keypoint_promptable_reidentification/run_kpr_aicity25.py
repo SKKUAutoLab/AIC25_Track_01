@@ -11,11 +11,14 @@ from tqdm import tqdm
 from torchreid.scripts.builder import build_config
 from torchreid.tools.feature_extractor import KPRFeatureExtractor
 
-# Add parent directory to Python path
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(parent_dir)
 
 import configuration as config
+
+
+SCENES = ["Warehouse_017", "Warehouse_018", "Warehouse_019", "Warehouse_020"]
+
 
 class NumpyEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -32,121 +35,95 @@ def generate_nested_folders(pth):
 
 
 def clip_keypoints_data(keypoints_data):
-
     for entry in keypoints_data:
         bbox = entry['bbox']
-        kpcs = entry['keypoints']
+        for kpc in entry['keypoints']:
+            kpc[0] = max(0, min(kpc[0], bbox[2] - 1))
+            kpc[1] = max(0, min(kpc[1], bbox[3] - 1))
 
-        for kpc in kpcs:
-            kpc[0] =  max(0, min(kpc[0], bbox[2] - 1))
-            kpc[1] =  max(0, min(kpc[1], bbox[3] - 1))
-        
 
 def load_kpr_samples(image_files, image_folder_pth, pose_folder_pth):
-    # Initialize an empty list to store the samples
     samples = []
     name_samples = []
-    # Iterate over the image files and construct each sample dynamically
     for img_name in image_files:
-        class_id = img_name.split('_')[-1].split('.')[0]
-        if class_id == '0':
-            # Construct full paths
-            img_path = os.path.join(image_folder_pth, img_name)
-            json_path = os.path.join(pose_folder_pth, img_name + '_keypoints.json')
-
-            # Load the image
-            img = cv2.imread(img_path)
-
-            # Load the keypoints from the JSON file
-            with open(json_path, 'r') as json_file:
-                keypoints_data = json.load(json_file)
-                clip_keypoints_data(keypoints_data)
-
-            # Initialize lists to hold keypoints
-            keypoints_xyc = []
-            negative_kps = []
-
-            # Process the keypoints data
-            for entry in keypoints_data:
-                if entry["is_target"]:
-                    keypoints_xyc.append(entry["keypoints"])
-                else:
-                    negative_kps.append(entry["keypoints"])
-
-            assert len(keypoints_xyc) == 1, "Only one target keypoint set is supported for now."
-
-            # Convert lists to numpy arrays
-            keypoints_xyc = np.array(keypoints_xyc[0])
-            negative_kps = np.array(negative_kps)
-
-            # Create the sample dictionary
-            sample = {
-                "image": img,
-                "keypoints_xyc": keypoints_xyc,  # the positive prompts indicating the re-identification target
-                "negative_kps": negative_kps,  # the negative keypoints indicating other pedestrians
-            }
-            # Append the sample to the list
-            samples.append(sample)
-            name_samples.append(img_name)
+        if img_name.split('_')[-1].split('.')[0] != '0':
+            continue
+        samples.append(_build_sample(img_name, image_folder_pth, pose_folder_pth))
+        name_samples.append(img_name)
     return samples, name_samples
 
 
-def run_kpr_a_scene(scene):
+def _build_sample(img_name, image_folder_pth, pose_folder_pth):
+    img = cv2.imread(os.path.join(image_folder_pth, img_name))
+    with open(os.path.join(pose_folder_pth, img_name + '_keypoints.json'), 'r') as json_file:
+        keypoints_data = json.load(json_file)
+        clip_keypoints_data(keypoints_data)
+    keypoints_xyc = []
+    negative_kps = []
+    for entry in keypoints_data:
+        if entry["is_target"]:
+            keypoints_xyc.append(entry["keypoints"])
+        else:
+            negative_kps.append(entry["keypoints"])
+    assert len(keypoints_xyc) == 1, "Only one target keypoint set is supported for now."
+    return {
+        "image": img,
+        "keypoints_xyc": np.array(keypoints_xyc[0]),
+        "negative_kps": np.array(negative_kps),
+    }
 
-    kpr_cfg = build_config(config_path="configs/aicity_kpr/kpr_aicity_market_test.yaml")
-    kpr_cfg.use_gpu = torch.cuda.is_available() # already done in build_config(...), but can be overwritten here
-    extractor = KPRFeatureExtractor(kpr_cfg)
 
-    cur_test_scene = config.ROOT_DATA_FOLDER + config.DETECTION_RESULTS_FOLDER + scene + config.CROP_IMAGE_FOLDER
-    cur_pose_scene = config.ROOT_DATA_FOLDER + config.RESULTS_FOLDER + scene + config.POSE_RESULTS
-    cur_reid_scene = config.ROOT_DATA_FOLDER + config.RESULTS_FOLDER + scene + config.REID_RESULTS
+class SceneReidExtractor:
+    def __init__(self, scene):
+        self.scene = scene
+        self.crop_folder = config.ROOT_DATA_FOLDER + config.DETECTION_RESULTS_FOLDER + scene + config.CROP_IMAGE_FOLDER
+        self.pose_folder = config.ROOT_DATA_FOLDER + config.RESULTS_FOLDER + scene + config.POSE_RESULTS
+        self.reid_folder = config.ROOT_DATA_FOLDER + config.RESULTS_FOLDER + scene + config.REID_RESULTS
 
-    generate_nested_folders(cur_reid_scene)
+    def run(self):
+        extractor = self._build_extractor()
+        generate_nested_folders(self.reid_folder)
+        frames = self._group_images_by_frame()
+        print('Total frames: ', len(frames.keys()))
+        for frameID in tqdm(frames.keys(), desc=self.scene + ' extract ReID feats'):
+            frame_dict = self._extract_frame(extractor, frames[frameID])
+            json.dump(frame_dict, open(self.reid_folder + '/' + frameID + '.json', 'w'), indent=4, cls=NumpyEncoder)
 
-    print('Make list of cropped images...')
-    image_files = [f for f in os.listdir(cur_test_scene) if os.path.isfile(os.path.join(cur_test_scene, f))]
-    frameID_to_images = defaultdict(list)
-    for img_file in tqdm(image_files, desc= scene + ' frameID searching'):
-        fid = img_file.split('_')[5]  # extract frameID from filename
-        frameID_to_images[fid].append(img_file)
-    print('Total frames: ', len(frameID_to_images.keys()))
+    @staticmethod
+    def _build_extractor():
+        kpr_cfg = build_config(config_path="configs/aicity_kpr/kpr_aicity_market_test.yaml")
+        kpr_cfg.use_gpu = torch.cuda.is_available()
+        return KPRFeatureExtractor(kpr_cfg)
 
-    for frameID in tqdm(frameID_to_images.keys(), desc= scene + ' extract ReID feats'):
-        frame_dict = {}
-        # Sort images by camID
-        image_files_per_frame = frameID_to_images[frameID]
+    def _group_images_by_frame(self):
+        print('Make list of cropped images...')
+        image_files = [f for f in os.listdir(self.crop_folder) if os.path.isfile(os.path.join(self.crop_folder, f))]
+        frameID_to_images = defaultdict(list)
+        for img_file in tqdm(image_files, desc=self.scene + ' frameID searching'):
+            frameID_to_images[img_file.split('_')[5]].append(img_file)
+        return frameID_to_images
+
+    def _extract_frame(self, extractor, image_files_per_frame):
         camID_to_images = defaultdict(list)
         for img_file in image_files_per_frame:
-            cid = img_file.split('_')[2]  # extract camID from filename
-            camID_to_images[cid].append(img_file)
-
+            camID_to_images[img_file.split('_')[2]].append(img_file)
+        frame_dict = {}
         for camID in camID_to_images.keys():
-            img_list = camID_to_images[camID]
-            samples, name_samples = load_kpr_samples(img_list, cur_test_scene, cur_pose_scene)
-            if len(samples) > 0:
-                _, embeddings, visibility_scores, _ = extractor(samples)
-                np_embeddings = embeddings.cpu().detach().numpy()
-                np_vis_scrores= visibility_scores.cpu().detach().numpy()
+            frame_dict[camID] = self._extract_camera(extractor, camID_to_images[camID])
+        return frame_dict
 
-                frame_dict[camID] = {
-                    'embeddings': np_embeddings,
-                    'visibility_scores': np_vis_scrores,
-                    'image_names': name_samples
-                }
-            else:
-                frame_dict[camID] = {
-                    'embeddings': None,
-                    'visibility_scores': None,
-                    'image_names': None
-                }
-        json.dump(frame_dict, open(cur_reid_scene + '/' + frameID + '.json', 'w'), indent=4, cls=NumpyEncoder)
-
-    return
+    def _extract_camera(self, extractor, img_list):
+        samples, name_samples = load_kpr_samples(img_list, self.crop_folder, self.pose_folder)
+        if len(samples) == 0:
+            return {'embeddings': None, 'visibility_scores': None, 'image_names': None}
+        _, embeddings, visibility_scores, _ = extractor(samples)
+        return {
+            'embeddings': embeddings.cpu().detach().numpy(),
+            'visibility_scores': visibility_scores.cpu().detach().numpy(),
+            'image_names': name_samples,
+        }
 
 
 if __name__ == "__main__":
-    run_kpr_a_scene(scene="Warehouse_017")
-    run_kpr_a_scene(scene="Warehouse_018")
-    run_kpr_a_scene(scene="Warehouse_019")
-    run_kpr_a_scene(scene="Warehouse_020")
-
+    for scene in SCENES:
+        SceneReidExtractor(scene).run()

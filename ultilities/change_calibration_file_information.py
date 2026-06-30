@@ -2,47 +2,33 @@ import argparse
 import glob
 import json
 import os
-import shutil
-from copy import deepcopy
 
 from loguru import logger
 from tqdm import tqdm
 
 from mtmc.core.objects.units import Camera
 
-def rename_file_videos_depthmaps(folder_intput, scene_name):
-	folder_input_videos  = os.path.join(folder_intput, scene_name, "videos/")
-	list_files = glob.glob(os.path.join(folder_input_videos, "*.mp4"))
 
-	for file_path in tqdm(list_files, desc=f"Rename videos in scene name {scene_name} : "):
-		file_path_old     = file_path
-		file_name_old     = os.path.basename(file_path)
-		file_name_old_ext = os.path.splitext(file_name_old)[0]
+class CameraIdRenamer:
+	def __init__(self, scene_root, scene_name):
+		self.scene_root = scene_root
+		self.scene_name = scene_name
 
-		file_name_new       = f'{Camera.adjust_camera_id(file_name_old_ext)}.mp4'
-		file_path_new       = os.path.join(folder_input_videos, file_name_new)
+	def rename_media(self):
+		self._rename_folder("videos", "mp4")
+		self._rename_folder("depth_maps", "h5")
 
-		try:
-			os.rename(file_path_old, file_path_new)
-			logger.info(f"Folder '{file_path_old}' successfully renamed to '{file_path_new}'.")
-		except FileNotFoundError:
-			logger.error(f"Error: Folder '{file_path_old}' not found.")
-		except FileExistsError:
-			logger.error(f"Error: Folder '{file_path_new}' already exists.")
-		except Exception as e:
-			logger.error(f"An unexpected error occurred: {e}")
+	def _rename_folder(self, subfolder, extension):
+		folder = os.path.join(self.scene_root, subfolder, "")
+		list_files = glob.glob(os.path.join(folder, f"*.{extension}"))
+		desc = f"Rename {subfolder} in scene name {self.scene_name} : "
+		for file_path in tqdm(list_files, desc=desc):
+			self._rename_one(folder, file_path, extension)
 
-	folder_input_depthmaps  = os.path.join(folder_intput, scene_name, "depth_maps/")
-	list_files = glob.glob(os.path.join(folder_input_depthmaps, "*.h5"))
-
-	for file_path in tqdm(list_files, desc=f"Rename depth_maps in scene name {scene_name} : "):
-		file_path_old     = file_path
-		file_name_old     = os.path.basename(file_path)
-		file_name_old_ext = os.path.splitext(file_name_old)[0]
-
-		file_name_new       = f'{Camera.adjust_camera_id(file_name_old_ext)}.h5'
-		file_path_new       = os.path.join(folder_input_depthmaps, file_name_new)
-
+	@staticmethod
+	def _rename_one(folder, file_path_old, extension):
+		stem = os.path.splitext(os.path.basename(file_path_old))[0]
+		file_path_new = os.path.join(folder, f"{Camera.adjust_camera_id(stem)}.{extension}")
 		try:
 			os.rename(file_path_old, file_path_new)
 			logger.info(f"Folder '{file_path_old}' successfully renamed to '{file_path_new}'.")
@@ -54,20 +40,33 @@ def rename_file_videos_depthmaps(folder_intput, scene_name):
 			logger.error(f"An unexpected error occurred: {e}")
 
 
-def adjust_camera_id_calibration(json_file):
+class CalibrationCameraIds:
+	def __init__(self, json_file):
+		self.json_file = json_file
 
-	with open(json_file, "r") as f_read:
-		data = json.load(f_read)
+	def adjust(self):
+		data = self._load()
+		self._replace_camera_ids(data)
+		output_file = self.json_file.replace("calibration.json", "calibration_modified.json")
+		self._save(data, output_file)
+		print(f"All camera IDs have been replaced and saved to {output_file}.")
 
-	for sensor in data.get("sensors", []):
-		if sensor.get("type") == "camera":
+	def _load(self):
+		with open(self.json_file, "r") as f_read:
+			return json.load(f_read)
+
+	@staticmethod
+	def _replace_camera_ids(data):
+		for sensor in data.get("sensors", []):
+			if sensor.get("type") != "camera":
+				continue
 			sensor["id"] = Camera.adjust_camera_id(sensor["id"])
 
-	json_file = json_file.replace("calibration.json", "calibration_modified.json")
-	with open(json_file, "w") as f_write:
-		json.dump(data, f_write, indent=4)
+	@staticmethod
+	def _save(data, output_file):
+		with open(output_file, "w") as f_write:
+			json.dump(data, f_write, indent=4)
 
-	print(f"All camera IDs have been replaced and saved to {json_file}.")
 
 def main():
 	parser = argparse.ArgumentParser(description="Process crop detetion image.")
@@ -78,8 +77,10 @@ def main():
 	list_scene    = ["Warehouse_017", "Warehouse_018", "Warehouse_019", "Warehouse_020"]
 
 	for scene_name in tqdm(list_scene):
-		adjust_camera_id_calibration(os.path.join(folder_intput, scene_name, f"calibration.json"))
-		rename_file_videos_depthmaps(folder_intput, scene_name)
+		scene_root = os.path.join(folder_intput, scene_name)
+		CalibrationCameraIds(os.path.join(scene_root, "calibration.json")).adjust()
+		CameraIdRenamer(scene_root, scene_name).rename_media()
+
 
 if __name__ == "__main__":
 	main()
